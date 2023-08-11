@@ -18,7 +18,21 @@
 
 // Створюємо об'єкт Book
 
+const Book = {
+  title: "Загальна Книга",
+  author: "Анонім",
+  pages: 0,
+  read() {
+    return `Ви читаєте "${this.title}" від "${this.author}"`;
+  },
+  writable: true,
+};
+
 console.log("Завдання: 1 ==============================");
+
+console.log(Book);
+console.log(Object.getPrototypeOf(Book));
+console.log(Book.read());
 
 // Виводимо в консоль Об'єкт: Book
 
@@ -41,7 +55,13 @@ console.log("Завдання: 1 ==============================");
 
 // Додаємо властивість genre
 
+const Novel = Object.create(Book);
+Novel.genre = "Новела";
+
 console.log("Завдання: 2 ==============================");
+
+console.log(Novel);
+console.log(Object.getPrototypeOf(Novel));
 
 // Виводимо в консоль Об'єкт: Novel
 
@@ -64,7 +84,18 @@ console.log("Завдання: 2 ==============================");
 
 // Змінемо прототип об'єкта Biography на Novel
 
+const Biography = {
+  title: "Загальна Біографія",
+  autor: "Біограф",
+  pages: 200,
+};
+Object.setPrototypeOf(Biography, Novel);
+
 console.log("Завдання: 3 ==============================");
+
+console.log(Biography);
+console.log(Object.getPrototypeOf(Biography) === Novel);
+
 // Виводимо в консоль Об'єкт: Biography
 
 // Перевіримо чи являється Novel прототипом Biography та виведемо в консоль
@@ -76,6 +107,24 @@ console.log("Завдання: 3 ==============================");
  * Також тут використовується інкапсуляція для створення властивості 'info', яка не може бути змінена напряму, а лише змінюється за допомогю гетера
  */
 
+const ScienceBook = Object.create(Book);
+Object.defineProperty(ScienceBook, "info", {
+  value: "написана в 1915 році",
+  writable: false,
+  configurable: false,
+});
+Object.defineProperty(ScienceBook, "setInfo", {
+  set: function (value) {
+    this.info = value;
+  },
+});
+Object.defineProperty(ScienceBook, "getInfo", {
+  get: function () {
+    return `Про книгу ${this.title}: ${this.info}`;
+  },
+});
+ScienceBook.title = "Фізика 101";
+ScienceBook.author = "Альберт Ейнштейн";
 // Створюємо ScienceBook, наслідуємо властивості і функції від об'єкта Book
 
 // Додаємо властивість 'info' за допомогою Object.defineProperty
@@ -95,6 +144,11 @@ console.log("Завдання: 3 ==============================");
 // | info        | написана в 1915 році |
 
 console.log("Завдання: 4 ==============================");
+
+console.log(ScienceBook.info);
+console.log(Object.getOwnPropertyDescriptor(ScienceBook, "info"));
+console.log(ScienceBook.getInfo);
+
 // Виводимо в консоль властивість info
 
 // Виводимо в консоль налаштування властивости info
@@ -107,6 +161,12 @@ console.log("Завдання: 4 ==============================");
  * має виводити "Ви читаєте підручник "<title>" від <author>. <info>"
  */
 
+const Textbook = Object.create(ScienceBook);
+Textbook.read = function () {
+  return `Ви читаєте підручник "${this.title}" від "${this.author}". ${this.info}`;
+};
+Textbook.title = "Фізика у Вищій Школі";
+Textbook.author = "Дж. Д. Джонс";
 //Створюємо Textbook та наслідуємо властивості з ScienceBook
 
 // Перевизначаємо метод read(), відповідно з дописом вище
@@ -118,6 +178,9 @@ console.log("Завдання: 4 ==============================");
 // | author      | "Дж. Д. Джонс"             |
 
 console.log("Завдання: 5 ==============================");
+
+console.log(Textbook.read());
+
 // Викликаємо функцію read об'єкту Textbook
 
 // 6. Абстракція: створення об'єкта з загальними властивостями
@@ -139,6 +202,18 @@ console.log("Завдання: 5 ==============================");
 
 // Створюємо об'єкт Media
 
+const Media = {
+  format: "Загальний Формат",
+  length: 0,
+  play() {
+    return `Зараз відтворюється медіа у форматі "${this.format}" з тривалістю "${this.length}" секунд`;
+  },
+};
+
+const Song = Object.create(Media);
+Song.artist = "Загальний Виконавець";
+Song.title = "Загальна Пісня";
+
 /*
  * Об'єкт: Song
  * Властивості та функції наслідуються від об'єкта Media
@@ -154,4 +229,7 @@ console.log("Завдання: 5 ==============================");
 // | title       | "Загальна Пісня"       |
 
 console.log("Завдання: 6 ==============================");
+
+console.log(Song.play());
+
 // Викликаємо функцію play об'єкту Song
